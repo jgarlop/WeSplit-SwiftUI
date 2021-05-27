@@ -4,14 +4,17 @@ struct ContentView: View {
     @State private var checkAmount = ""
     @State private var numberOfPeople = 2
     @State private var tipPercentage = 2
-    var totalPerPerson: Double {
-        let peopleCount = Double(numberOfPeople + 2)
+
+    var totalCheckAmount: Double {
         let tipSelection = Double(tipPercentages[tipPercentage])
         let orderAmount = Double(checkAmount) ?? 0
         let tipValue = orderAmount / 100 * tipSelection
-        let grandTotal = orderAmount + tipValue
+        return orderAmount + tipValue
+    }
 
-        return grandTotal / peopleCount
+    var totalPerPerson: Double {
+        let peopleCount = Double(numberOfPeople + 2)
+        return totalCheckAmount / peopleCount
     }
 
     let tipPercentages = [10, 15, 20, 25, 0]
@@ -38,7 +41,11 @@ struct ContentView: View {
                 }
                 .pickerStyle(SegmentedPickerStyle())
 
-                Section {
+                Section(header: Text("Check total")) {
+                    Text("$\(totalCheckAmount)")
+                }
+
+                Section(header: Text("Amount per person").textCase(.none)) {
                     Text("$\(totalPerPerson, specifier: "%.2f")")
                 }
             }.navigationBarTitle("WeSplit")
